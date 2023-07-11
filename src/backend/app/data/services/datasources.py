@@ -1,7 +1,7 @@
 import requests
 from pandas import DataFrame
 
-from data import BaseDataSource, IAbstractDataSource
+from app.data.services import BaseDataSource, IAbstractDataSource
 
 
 from typing import Union, List, Dict
@@ -56,12 +56,16 @@ class OpenDataSource(BaseDataSource, IAbstractDataSource):
                     else: 
                         print(resourse['url'])
                 
-                metadata = OpenDataSource._update_metadata(metadata)   
+                metadata = OpenDataSource._update_metadata(metadata, 
+                                                           url=url,
+                                                           name=title,
+                                                           text=df_metadata, )   
                 
             except Exception as e:
                 print(f"{name} : {e.text}")
 
-            return metadata.to_dict()
+        return metadata.to_dict()
+
 
     def read_datasets(self, 
                       dataset_names: Union[List[str], str], 

@@ -1,5 +1,6 @@
 {
-    
-"data_sources_path": "src/backend/app/data/datasources.py"
-
+    "data_sources_path": "src/backend/app/data/services/datasources.py",
+    "db_name": "Faiss",
+    "embeddings": "fake",
+    "index_name": "src/backend/database/docs_index"
 }

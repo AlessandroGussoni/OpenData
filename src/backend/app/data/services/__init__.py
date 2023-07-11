@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
-from typing import List, Union, Type
+from typing import List, Dict, Union, Type
 
 from pandas import DataFrame
 
-from data.entities.models import MetaData
-from pydantic import BaseModel
+from app.data.entities.models import MetaData
+from app.pipelines.entities.loaders import Loader
+
+from langchain.docstore.document import Document
 
 class IAbstractDataSource(ABC):
 
@@ -44,8 +46,13 @@ class MetaDataMixIn(object):
 
 
 
+class BaseDataSource(MetaDataMixIn):    
 
-class BaseDataSource(MetaDataMixIn):
+    """
+    Possible refactor: Ogni classe al momento carica e salva l indice, 
+    ha più senso che ogni ds aggiorni i metadata e l indice venga caricato una volta sola
+    
+    """
 
     def __init__(self, 
                  name: str,
@@ -56,8 +63,18 @@ class BaseDataSource(MetaDataMixIn):
 
     def __repr__(self) -> str:
         return self.name
+    
+    @staticmethod
+    def get_documents_from_metadata(metadata: Type[MetaData]) -> List[Document]:
+        
+        docs = [Document(page_content=text, 
+                         metadata={"url": metadata['text'][i],
+                                   "name": metadata['name'][i]}) for i, text in enumerate(metadata['text'])]
 
-    def update(self) -> bool:
+        return docs
+
+    def update(self, 
+               indexed_datasets: List) -> Union[None, Dict[str, List[str]]]:
         
         """
         Method used to keep the index updated
@@ -65,25 +82,12 @@ class BaseDataSource(MetaDataMixIn):
 
         # get all datasets available on datasource
         available_datasets = self._list_available_datasets()
-        # get dataset already scraped
-        indexed_datasets = self._upload()
         # get datasets to be scraped
         new_datasets = list(set(available_datasets).difference(set(indexed_datasets)))
         # if new ds found, run scraping pipeline
         if new_datasets:
             # get new ds metadata
             metadata = self._get_metadata(new_datasets)
-            # save metadata
-            self.save(metadata)
-            return True
-        # if not updated return false
-        return False
-
-    
-    def save(self, 
-             old_metadata, 
-             new_metadata):
-        return 
-    
-    def _upload(self):
-        return
+            
+            return metadata
+        return None

@@ -6,5 +6,3 @@ class MetaData(BaseModel):
     text: List[str] = []
     url: List[str] = []
     name: List[str] = []
-
-print(MetaData())

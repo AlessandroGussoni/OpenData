@@ -1,22 +1,37 @@
+import sys
+import os
+
+# Get the current directory of the main.py file
+current_dir = os.path.dirname(os.path.abspath(__file__))
+# get parent dir
+parent_dir = os.path.dirname(current_dir)
+# Add the parent directory to the Python path for the whole project
+sys.path.append(parent_dir)
+
+
 from fastapi import FastAPI, APIRouter, Request
 from contextlib import asynccontextmanager
 
 from fastapi.openapi.docs import get_swagger_ui_html
 
-from backend.app.pipelines import update_pipeline, extract_classes_from_file
+from app.pipelines.services.executors import update_pipeline, extract_classes_from_file
 
 import uvicorn
 from typing import List, Dict
-import json
+from app.pipelines.entities.loaders import config_loader
 
+"""
+
+Singleton (nel coolpkg)
+O Depends()
+"""
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     ''' Run at startup
         Initialise the Client and add it to app.state
     '''
-    with open(r"src\backend\config.json", 'rb') as file:
-        app.state.CONFIG = json.load(file)
+    app.state.CONFIG = config_loader()
     yield
 
 
@@ -37,7 +52,7 @@ def get_status(request: Request) -> Dict[str, bool]:
          summary="List all available data sources")
 def list_data_sources(request: Request) -> Dict[str, List[str]]:
 
-    class_mapper = extract_classes_from_file(request.app.state.CONFIG)
+    class_mapper = extract_classes_from_file(request.app.state.CONFIG['data_sources_path'])
 
     names = list(class_mapper.keys())
 
@@ -48,12 +63,9 @@ def list_data_sources(request: Request) -> Dict[str, List[str]]:
          summary="Run the update ds pipeline")
 def update_data_sources(request: Request) -> Dict[str, bool]:
 
-    flags = update_pipeline(request.app.state.CONFIG)
+    updated_data_sources = update_pipeline(request.app.state.CONFIG)
 
-    return 
-
-
-
+    return {"names": updated_data_sources}
 
 
 if __name__ == '__main__':
