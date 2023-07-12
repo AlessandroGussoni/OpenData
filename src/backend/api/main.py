@@ -9,22 +9,25 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.append(parent_dir)
 
 
-from fastapi import FastAPI, APIRouter, Request
+from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 
 from fastapi.openapi.docs import get_swagger_ui_html
 
 from app.pipelines.services.executors import update_pipeline, extract_classes_from_file
+from app.pipelines.entities.loaders import config_loader
 
 import uvicorn
 from typing import List, Dict
-from app.pipelines.entities.loaders import config_loader
+
 
 """
 
 Singleton (nel coolpkg)
 O Depends()
 """
+
+# TODO: Type Hint, Debugging endpoint, comments, add router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -61,7 +64,7 @@ def list_data_sources(request: Request) -> Dict[str, List[str]]:
 
 @app.get('/update_datasources',
          summary="Run the update ds pipeline")
-def update_data_sources(request: Request) -> Dict[str, bool]:
+def update_data_sources(request: Request) -> Dict[str, List[str]]:
 
     updated_data_sources = update_pipeline(request.app.state.CONFIG)
 

@@ -4,7 +4,7 @@ from pandas import DataFrame
 from app.data.services import BaseDataSource, IAbstractDataSource
 
 
-from typing import Union, List, Dict
+from typing import Union, List, Dict, Tuple
 
 
 class OpenDataSource(BaseDataSource, IAbstractDataSource):
@@ -16,6 +16,45 @@ class OpenDataSource(BaseDataSource, IAbstractDataSource):
         name = "OpenData1"
         url = "http://www.datiopen.it/SpodCkanApi/api/"
         super().__init__(name, url)
+
+    @staticmethod
+    def parse_format_from_data(data: Dict) -> Union[str, None]:
+        url = data.get('url', None)
+        if not url: return url
+        format_ = data['url'].split('.')[-1]
+        return format_
+    
+
+    @staticmethod
+    def parse_data_from_url(data_url: str) -> Tuple[str, str, str]:
+        
+        try:
+            data = requests.get(data_url).json()
+            title = data['title']
+            notes = data['notes']
+            tags = data['tags']
+        except Exception as e:
+            print(f"Level 1: {e} : {url}")
+            return '', '', ''
+        
+        df_metadata = OpenDataSource._add_tags(title, notes, tags)      
+
+        if "resources" in data.keys(): 
+            list_info = data['resources']
+        elif "relations" in data.keys(): 
+            list_info = data['relations']
+        else:
+            print(f"{data_url} not found valid data key") 
+            return '', '', ''
+
+        url = ''
+        for resource in list_info:
+            format_ = OpenDataSource.parse_format_from_data(resource)
+            if format_ == 'csv':
+                url = resource['url']
+
+        return url, title, df_metadata
+
 
     def parse_url_from_version(self, version: Union[int, str]) -> str:
         return self.url + f"{version}/rest/dataset"
@@ -36,35 +75,23 @@ class OpenDataSource(BaseDataSource, IAbstractDataSource):
                       *args, **kwargs) -> Dict[str, List[str]]:
         
         metadata = OpenDataSource._create_metadata()
-        for name in dataset_names:
+        for name in dataset_names[:50]:
 
             dataset_version = [name in version_names for version_names in self.dfs].index(True) + 1
             dataset_url = self.parse_url_from_version(dataset_version) + '/' + name
 
-            try:
-                data = requests.get(dataset_url).json()
-                title = data['title']
-                notes = data['notes']
-                tags = data['tags']
+            url, title, df_metadata = OpenDataSource.parse_data_from_url(dataset_url)
 
-                df_metadata = OpenDataSource.add_tags(title, notes, tags)
-
-                for resourse in data['resources']:
-    
-                    if resourse['format'] == 'csv':
-                        url = resourse['url']
-                    else: 
-                        print(resourse['url'])
+            if (url == '') and (title == '') and (df_metadata == ''): continue 
                 
-                metadata = OpenDataSource._update_metadata(metadata, 
-                                                           url=url,
-                                                           name=title,
-                                                           text=df_metadata, )   
-                
-            except Exception as e:
-                print(f"{name} : {e.text}")
+            metadata = OpenDataSource._update_metadata(metadata, 
+                                                       url=url,
+                                                       name=title,
+                                                       text=df_metadata)               
+            print(f"{name} downloaded")
+            
 
-        return metadata.to_dict()
+        return metadata.dict()
 
 
     def read_datasets(self, 

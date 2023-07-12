@@ -23,6 +23,11 @@ class Loader(object):
         "openai": OpenAIEmbeddings
     }
 
+    _EMBEDDING_KWARGS_MAP = {
+        "fake": {"size": 100},
+        "openai": {}
+    }
+
     _DB_MAP = {
         "Faiss": FAISS
     }
@@ -31,12 +36,12 @@ class Loader(object):
         self.config = config
 
     def get_names_from_index(self) -> List:
-        if not self.index: return []
-        return [document.metadata['name'] for document in self.index.docstore.__dict__['dict'].values()]
+        if not self.db: return []
+        return [document.metadata['name'] for document in self.db.docstore.__dict__['dict'].values()]
 
     def get_embedding_class(self):
         embeddings_name = self.config['embeddings']
-        embeddings = Loader._EMBEDDINGS_MAP[embeddings_name]()
+        embeddings = Loader._EMBEDDINGS_MAP[embeddings_name](**Loader._EMBEDDING_KWARGS_MAP[embeddings_name])
         return embeddings
     
     def get_vector_db(self):
@@ -52,27 +57,29 @@ class Loader(object):
         try:
             db = vector_db.load_local(self.config["index_name"], embeddings)
 
-        except FileNotFoundError as e:
+        except RuntimeError as e:
             db = None
         setattr(self, 'db', db)
         return db
             
     def get_embeddings(self, documents: List[Document]) -> None:
 
-        vector_db = self.loader.get_vector_db()
-        embeddings = self.loader.get_embedding_class()
+        vector_db = self.get_vector_db()
+        embeddings = self.get_embedding_class()
 
         return vector_db.from_documents(documents, embeddings)
             
     def update_index(self,
                      new_metadata_index: Type) -> None:
-        
-        self.index.merge_from(new_metadata_index)
+        if not isinstance(self.db, type(None)):
+            self.db.merge_from(new_metadata_index)
+        else:
+            self.db = new_metadata_index
 
     
     def save_index(self, 
                    name: str) -> None:
-        self.index.save_local(name)
+        self.db.save_local(name)
 
     def destroy_index(self, 
                       name: str):

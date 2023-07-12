@@ -38,7 +38,7 @@ def update_pipeline(config: Dict[str, str]) -> List[str]:
 
     for name, data_source in class_mapper.items():
 
-        data_source_instance = data_source(loader)
+        data_source_instance = data_source()
 
         data_source_metadata = data_source_instance.update(indexed_datasets)
 

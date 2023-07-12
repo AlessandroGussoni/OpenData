@@ -4,7 +4,6 @@ from typing import List, Dict, Union, Type
 from pandas import DataFrame
 
 from app.data.entities.models import MetaData
-from app.pipelines.entities.loaders import Loader
 
 from langchain.docstore.document import Document
 
