@@ -40,12 +40,12 @@ class Loader(object):
         return [document.metadata[attr] for document in self.db.docstore.__dict__['_dict'].values()]
 
     def get_embedding_class(self):
-        embeddings_name = self.config['embeddings']
+        embeddings_name = self.config['index']['embeddings']
         embeddings = Loader._EMBEDDINGS_MAP[embeddings_name](**Loader._EMBEDDING_KWARGS_MAP[embeddings_name])
         return embeddings
     
     def get_vector_db(self):
-        db_name = self.config['db_name']
+        db_name = self.config['index']['db_name']
         db = Loader._DB_MAP[db_name]
         return db
 

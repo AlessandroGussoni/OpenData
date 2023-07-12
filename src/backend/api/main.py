@@ -14,7 +14,8 @@ from contextlib import asynccontextmanager
 
 from fastapi.openapi.docs import get_swagger_ui_html
 
-from app.pipelines.services.executors import update_pipeline, extract_classes_from_file
+from app.data.entities.models import QueryModel
+from app.pipelines.services.executors import extract_classes_from_file, update_pipeline, query_pipeline
 from app.pipelines.entities.loaders import config_loader, Loader
 
 import uvicorn
@@ -81,6 +82,15 @@ def list_datasets(request: Request) -> Dict[str, List[str]]:
     names = loader.get_attribute_from_index('name')
 
     return {"names": names}
+
+@app.post('/query_datasets',
+         summary="Answer a question over all indexed datasets")
+def query_datasets(Item: QueryModel, request: Request) -> Dict[str, str]:
+    
+    answer = query_pipeline(Item.query, request.app.state.CONFIG)
+
+    return {"answer": answer}
+
 
 if __name__ == '__main__':
     uvicorn.run(app)

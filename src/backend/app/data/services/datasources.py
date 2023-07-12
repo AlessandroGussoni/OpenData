@@ -88,7 +88,7 @@ class OpenDataSource(BaseDataSource, IAbstractDataSource):
                                                        url=url,
                                                        name=title,
                                                        text=df_metadata,
-                                                       data_source=data_source_name)               
+                                                       data_source=data_source_name)            
             print(f"{name} downloaded")
             
 
@@ -98,4 +98,4 @@ class OpenDataSource(BaseDataSource, IAbstractDataSource):
     def read_dataset(self, 
                      dataset_url: Union[List[str], str], 
                      *args, **kwargs) -> DataFrame:
-        return read_csv(dataset_url)
+        return read_csv(dataset_url, encoding='unicode_escape')

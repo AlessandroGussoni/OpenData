@@ -1,5 +1,6 @@
 from app.pipelines.entities.loaders import Loader
 from app.data.services import BaseDataSource
+from app.agents.entities.query_router import AgentQueryRouter
 
 from typing import Dict, List, Type
 
@@ -7,9 +8,9 @@ import inspect
 import importlib.util
 
 
-def extract_classes_from_file(file_path: str) -> Dict[str, Type]:
+def extract_classes_from_file(config: Dict[str, str]) -> Dict[str, Type]:
     classes = {}
-
+    file_path = config['data_sources_path']
     # Load the module from the file
     spec = importlib.util.spec_from_file_location("module_name", file_path)
     module = importlib.util.module_from_spec(spec)
@@ -27,14 +28,14 @@ def update_pipeline(config: Dict[str, str]) -> List[str]:
 
     loader = Loader(config)
 
-    class_mapper = extract_classes_from_file(config['data_sources_path'])
+    class_mapper = extract_classes_from_file(config)
     index_name = config['index_name']
 
     new_documents, updated_data_sources = [], []
 
     loader.upload()
 
-    indexed_datasets = loader.get_names_from_index()
+    indexed_datasets = loader.get_attribute_from_index('name')
 
     for name, data_source in class_mapper.items():
 
@@ -57,4 +58,26 @@ def update_pipeline(config: Dict[str, str]) -> List[str]:
     loader.save_index(index_name)
 
     return updated_data_sources
+
+
+def query_pipeline(query: str, config: Dict) -> str:
+
+    loader = Loader(config)
+
+    db = loader.upload()
+
+    docs = db.similarity_search(query, **config['index']['search_kwargs'])
+
+    class_mapper = extract_classes_from_file(config)
+
+    docs_class_mapper = {document.metadata['url']: class_mapper[document.metadata['data_source']]() for document in docs}
+
+    agent = AgentQueryRouter(docs_class_mapper, config)
+
+    return agent(query=query)
+    
+
+
+
+
 

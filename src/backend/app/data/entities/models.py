@@ -7,3 +7,6 @@ class MetaData(BaseModel):
     url: List[str] = []
     name: List[str] = []
     data_source: List[str] = []
+
+class QueryModel(BaseModel):
+    query: str

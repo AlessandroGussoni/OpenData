@@ -64,12 +64,9 @@ class BaseDataSource(MetaDataMixIn):
         return self.name
     
     @staticmethod
-    def get_documents_from_metadata(metadata: Type[MetaData]) -> List[Document]:
-        
-        docs = [Document(page_content=text, 
-                         metadata={"url": metadata['text'][i],
-                                   "name": metadata['name'][i]}) for i, text in enumerate(metadata['text'])]
-
+    def get_documents_from_metadata(metadata: Dict[str, List[str]]) -> List[Document]:
+        # logica oscena, devo cambiarla (velocizzarla per lo meno)  
+        docs = [Document(page_content=row['text'], metadata={**row.to_dict()}) for i, row in DataFrame(metadata).iterrows()]
         return docs
 
     def update(self, 
