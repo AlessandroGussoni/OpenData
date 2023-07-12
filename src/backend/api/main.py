@@ -15,7 +15,7 @@ from contextlib import asynccontextmanager
 from fastapi.openapi.docs import get_swagger_ui_html
 
 from app.pipelines.services.executors import update_pipeline, extract_classes_from_file
-from app.pipelines.entities.loaders import config_loader
+from app.pipelines.entities.loaders import config_loader, Loader
 
 import uvicorn
 from typing import List, Dict
@@ -55,7 +55,7 @@ def get_status(request: Request) -> Dict[str, bool]:
          summary="List all available data sources")
 def list_data_sources(request: Request) -> Dict[str, List[str]]:
 
-    class_mapper = extract_classes_from_file(request.app.state.CONFIG['data_sources_path'])
+    class_mapper = extract_classes_from_file(request.app.state.CONFIG)
 
     names = list(class_mapper.keys())
 
@@ -70,6 +70,17 @@ def update_data_sources(request: Request) -> Dict[str, List[str]]:
 
     return {"names": updated_data_sources}
 
+@app.get('/list_datasets',
+         summary="get a list of all indexed datasets")
+def list_datasets(request: Request) -> Dict[str, List[str]]:
+    
+    loader = Loader(request.app.state.CONFIG) 
+
+    loader.upload()
+
+    names = loader.get_attribute_from_index('name')
+
+    return {"names": names}
 
 if __name__ == '__main__':
     uvicorn.run(app)

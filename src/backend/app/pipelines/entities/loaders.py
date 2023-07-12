@@ -35,9 +35,9 @@ class Loader(object):
     def __init__(self, config) -> None:
         self.config = config
 
-    def get_names_from_index(self) -> List:
+    def get_attribute_from_index(self, attr) -> List[str]:
         if not self.db: return []
-        return [document.metadata['name'] for document in self.db.docstore.__dict__['dict'].values()]
+        return [document.metadata[attr] for document in self.db.docstore.__dict__['_dict'].values()]
 
     def get_embedding_class(self):
         embeddings_name = self.config['embeddings']

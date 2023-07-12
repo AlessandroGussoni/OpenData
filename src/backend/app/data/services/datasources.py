@@ -1,8 +1,7 @@
 import requests
-from pandas import DataFrame
+from pandas import DataFrame, read_csv
 
 from app.data.services import BaseDataSource, IAbstractDataSource
-
 
 from typing import Union, List, Dict, Tuple
 
@@ -72,6 +71,7 @@ class OpenDataSource(BaseDataSource, IAbstractDataSource):
 
     def _get_metadata(self, 
                       dataset_names: Union[List[str], str],
+                      data_source_name: str,
                       *args, **kwargs) -> Dict[str, List[str]]:
         
         metadata = OpenDataSource._create_metadata()
@@ -87,14 +87,15 @@ class OpenDataSource(BaseDataSource, IAbstractDataSource):
             metadata = OpenDataSource._update_metadata(metadata, 
                                                        url=url,
                                                        name=title,
-                                                       text=df_metadata)               
+                                                       text=df_metadata,
+                                                       data_source=data_source_name)               
             print(f"{name} downloaded")
             
 
         return metadata.dict()
 
 
-    def read_datasets(self, 
-                      dataset_names: Union[List[str], str], 
-                      *args, **kwargs) -> DataFrame:
-        pass
+    def read_dataset(self, 
+                     dataset_url: Union[List[str], str], 
+                     *args, **kwargs) -> DataFrame:
+        return read_csv(dataset_url)

@@ -6,3 +6,4 @@ class MetaData(BaseModel):
     text: List[str] = []
     url: List[str] = []
     name: List[str] = []
+    data_source: List[str] = []
