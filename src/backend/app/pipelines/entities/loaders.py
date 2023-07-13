@@ -18,20 +18,6 @@ def config_loader() -> Dict:
 
 class Loader(object):
 
-    _EMBEDDINGS_MAP = {
-        "fake": FakeEmbeddings,
-        "openai": OpenAIEmbeddings
-    }
-
-    _EMBEDDING_KWARGS_MAP = {
-        "fake": {"size": 100},
-        "openai": {}
-    }
-
-    _DB_MAP = {
-        "Faiss": FAISS
-    }
-
     def __init__(self, config) -> None:
         self.config = config
 
@@ -40,13 +26,13 @@ class Loader(object):
         return [document.metadata[attr] for document in self.db.docstore.__dict__['_dict'].values()]
 
     def get_embedding_class(self):
-        embeddings_name = self.config['index']['embeddings']
-        embeddings = Loader._EMBEDDINGS_MAP[embeddings_name](**Loader._EMBEDDING_KWARGS_MAP[embeddings_name])
+        embeddings_name = self.config['embeddings']['name']
+        embeddings = globals()[embeddings_name](**self.config['embeddings']['kwargs'])
         return embeddings
     
     def get_vector_db(self):
         db_name = self.config['index']['db_name']
-        db = Loader._DB_MAP[db_name]
+        db = globals()[db_name]
         return db
 
     

@@ -21,6 +21,8 @@ from app.pipelines.entities.loaders import config_loader, Loader
 import uvicorn
 from typing import List, Dict
 
+from dotenv import load_dotenv
+
 
 """
 
@@ -29,6 +31,15 @@ O Depends()
 """
 
 # TODO: Type Hint, Debugging endpoint, comments, add router
+# TODO: Return docs if conversation is not resetted (make query endpoint stateful)
+# TODO: maaaaaaybe passe the loader to the middleware
+# TODO: key injection
+# TODO: change config logic: i dont want to switch kwargs every time i switch llm
+
+
+
+# Load the environment variables from the .env file
+load_dotenv()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

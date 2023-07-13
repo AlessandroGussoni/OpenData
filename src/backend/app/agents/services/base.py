@@ -1,6 +1,7 @@
 from typing import Any, Dict, Type
 
 from langchain.agents.agent import AgentExecutor
+from langchain.agents.agent_types import AgentType
 from langchain.agents.agent_toolkits.pandas.base import create_pandas_dataframe_agent
 from langchain.schema.language_model import BaseLanguageModel
 
@@ -22,4 +23,6 @@ def create_csv_agent(
         except Exception as e:
             continue
 
-    return create_pandas_dataframe_agent(llm, df, **kwargs)
+    return create_pandas_dataframe_agent(llm, 
+                                         df=df, 
+                                         agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION, **kwargs)

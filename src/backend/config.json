@@ -1,7 +1,11 @@
 {
     "data_sources_path": "src/backend/app/data/services/datasources.py",
-    "index": {"db_name": "Faiss", "embeddings": "fake", "search_kwargs": {"k": 5}},
-    "llm": {"name": "FakeListLLM", "kwargs": {"responses": ["Action: Python REPL\nAction Input: print(2 + 2)", "Final Answer: 4"]}},
+    "index": {"db_name": "FAISS", 
+              "search_kwargs": {"k": 1}},
+    "embeddings": {"name": "OpenAIEmbeddings", 
+                   "kwargs": {}},
+    "llm": {"name": "ChatOpenAI", 
+            "kwargs": {"temperature": 0, "model": "gpt-3.5-turbo-0613"}},
     "agent_loader": "base_csv",
     "index_name": "src/backend/database/docs_index"
 }
