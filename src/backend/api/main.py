@@ -17,6 +17,7 @@ from fastapi.openapi.docs import get_swagger_ui_html
 from app.data.entities.models import QueryModel
 from app.pipelines.services.executors import extract_classes_from_file, update_pipeline, query_pipeline
 from app.pipelines.entities.loaders import config_loader, Loader
+from fastapi.middleware.cors import CORSMiddleware
 
 import uvicorn
 from typing import List, Dict
@@ -51,6 +52,16 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/docs")
@@ -102,6 +113,12 @@ def query_datasets(Item: QueryModel, request: Request) -> Dict[str, str]:
 
     return {"answer": answer}
 
+
+@app.post('/query_datasets_test',
+         summary="Test version of the endpoint")
+def query_datasets(Item: QueryModel, request: Request) -> Dict[str, str]:
+
+    return {"answer": "test answer"}
 
 if __name__ == '__main__':
     uvicorn.run(app)
