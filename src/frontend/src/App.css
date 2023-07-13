@@ -8,19 +8,22 @@
 }
 
 header {
+  background-color: rgb(176, 219, 67);
+  background: linear-gradient(45deg, rgb(176, 219, 67) 0%, rgb(18, 234, 234) 100%);
   display: flex;
   flex-direction: row;
   align-items: center;
   position: absolute;
   top: 10px;
-  right: 10px;
+  
 }
 
 .title {
-  text-align: center;
+  text-align: left;
   font-family: 'Arial', sans-serif;
   font-size: 24px;
-  margin: 20px 0;
+  margin-right: 50rem;
+  margin-left: 3rem;
 }
 
 .new-chat-btn {
@@ -30,6 +33,7 @@ header {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin-right: 20px;
 }
 
 nav {
@@ -61,10 +65,12 @@ main {
 }
 
 .search-section {
+  
   text-align: center;
 }
 
 .search-form {
+  
   margin-bottom: 16px;
 }
 
@@ -94,7 +100,8 @@ main {
 }
 
 .image-section {
-  background-color: #e6f2ff;
+  background-color: rgb(176, 219, 67);
+  background: linear-gradient(45deg, rgb(176, 219, 67) 0%, rgb(18, 234, 234) 100%);
   width: 100vw;
 }
 

@@ -27,7 +27,7 @@ class Loader(object):
 
     def get_embedding_class(self):
         embeddings_name = self.config['embeddings']['active']
-        embeddings = globals()[embeddings_name](**self.config['embeddings'][embeddings_name])
+        embeddings = globals()[embeddings_name](**self.config['embeddings']['models'][embeddings_name])
         return embeddings
     
     def get_vector_db(self):

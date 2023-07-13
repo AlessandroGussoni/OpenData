@@ -8,23 +8,35 @@ import AboutSection from './components/AboutSection';
 import config from './frontend_config.json';
 
 const App = () => {
+
+  const [datasetNum, setDatasetNum] = useState(0)
+
   const [searchTerm, setSearchTerm] = useState('');
   const [conversation, setConversation] = useState([]);
   const [showChatBox, setShowChatBox] = useState(false);
   const [searchTrigger, setSearchTrigger] = useState(0)
-  const [configData, setConfigData] = useState(config);
-  const url = configData.use_test_endpoint ? "http://127.0.0.1:8000/query_datasets_test" : "http://127.0.0.1:8000/query_datasets";
 
-  console.log(url)
+  const [configData, setConfigData] = useState(config);
+  const queryUrl = configData.use_test_endpoint ? "http://127.0.0.1:8000/query_datasets_test" : "http://127.0.0.1:8000/query_datasets";
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/list_datasets")
+    .then(response => {
+      setDatasetNum(response.data.names.length)
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+    }, [])
+
   useEffect(() => {
     if (searchTrigger > 0) {
 
       var bodyFormData = {
         query: searchTerm
       };
-      console.log(searchTerm)
       
-      axios.post(url, bodyFormData)
+      axios.post(queryUrl, bodyFormData)
         .then(response => {
           const newMessage = `Answer: ${response.data.answer}`;
           console.log('Passed')
@@ -59,15 +71,17 @@ const App = () => {
   return (
     <div className="app">
       <header>
+      <h1 className="title">Open Search</h1>
         <Navigation />
         <button className="new-chat-btn" onClick={handleNewChat}>
           New Chat
-        </button>
+        </button>    
+
       </header>
-      <h1 className="title">Open Search</h1>
       <main>
         <SearchSection
           searchTerm={searchTerm}
+          datasetNum={datasetNum}
           conversation={conversation}
           showChatBox={showChatBox}
           onSearchChange={handleSearchChange}

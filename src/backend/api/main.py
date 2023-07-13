@@ -8,21 +8,21 @@ parent_dir = os.path.dirname(current_dir)
 # Add the parent directory to the Python path for the whole project
 sys.path.append(parent_dir)
 
-
+from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
-
-from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
 from app.data.entities.models import QueryModel
 from app.pipelines.services.executors import extract_classes_from_file, update_pipeline, query_pipeline
 from app.pipelines.entities.loaders import config_loader, Loader
-from fastapi.middleware.cors import CORSMiddleware
 
-import uvicorn
-from typing import List, Dict
+import time
 
 from dotenv import load_dotenv
+
+from typing import List, Dict
 
 
 """
@@ -34,9 +34,6 @@ O Depends()
 # TODO: Type Hint, Debugging endpoint, comments, add router
 # TODO: Return docs if conversation is not resetted (make query endpoint stateful)
 # TODO: maaaaaaybe passe the loader to the middleware
-# TODO: key injection
-# TODO: change config logic: i dont want to switch kwargs every time i switch llm
-
 
 
 # Load the environment variables from the .env file
@@ -117,6 +114,8 @@ def query_datasets(Item: QueryModel, request: Request) -> Dict[str, str]:
 @app.post('/query_datasets_test',
          summary="Test version of the endpoint")
 def query_datasets(Item: QueryModel, request: Request) -> Dict[str, str]:
+
+    time.sleep(5)
 
     return {"answer": "test answer"}
 
