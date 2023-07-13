@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import List, Dict, Union, Type
 
+from urllib.request import urlopen
 from pandas import DataFrame
+import csv
 
 from app.data.entities.models import MetaData
 
@@ -62,6 +64,13 @@ class BaseDataSource(MetaDataMixIn):
 
     def __repr__(self) -> str:
         return self.name
+    
+    @staticmethod
+    def infer_separetor(url: str):
+        
+        data = urlopen(url)
+        dialect = csv.Sniffer().sniff(data.readline().decode())
+        return dialect.delimiter
     
     @staticmethod
     def get_documents_from_metadata(metadata: Dict[str, List[str]]) -> List[Document]:

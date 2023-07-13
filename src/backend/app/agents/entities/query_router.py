@@ -1,7 +1,7 @@
 from app.agents.entities import IAbstractAgent
 from app.agents.services.base import create_csv_agent
 
-from langchain.llms import OpenAI
+from langchain.llms import OpenAI, Cohere
 from langchain.chat_models import ChatOpenAI
 from app.agents.entities.llms import FakeListLLM
 

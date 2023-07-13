@@ -16,6 +16,8 @@ def create_csv_agent(
     
     """Create csv agent by loading to a dataframe and using pandas agent."""
 
+    # Todo: Move try except to dataclass method
+
     df = []
     for url, dataclass in datasources_mapper.items():
         try:

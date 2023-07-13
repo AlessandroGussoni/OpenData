@@ -1,5 +1,6 @@
 from langchain.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
+import csv
 from dotenv import load_dotenv
 
 load_dotenv()

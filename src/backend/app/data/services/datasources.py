@@ -1,4 +1,6 @@
 import requests
+from urllib.request import urlopen
+
 from pandas import DataFrame, read_csv
 
 from app.data.services import BaseDataSource, IAbstractDataSource
@@ -98,4 +100,7 @@ class OpenDataSource(BaseDataSource, IAbstractDataSource):
     def read_dataset(self, 
                      dataset_url: Union[List[str], str], 
                      *args, **kwargs) -> DataFrame:
-        return read_csv(dataset_url, encoding='unicode_escape')
+        
+        separator = BaseDataSource.infer_separetor(dataset_url)
+        
+        return read_csv(dataset_url, sep=separator, encoding='unicode_escape')

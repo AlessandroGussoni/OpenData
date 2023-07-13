@@ -4,8 +4,8 @@
               "search_kwargs": {"k": 1}},
     "embeddings": {"name": "OpenAIEmbeddings", 
                    "kwargs": {}},
-    "llm": {"name": "ChatOpenAI", 
-            "kwargs": {"temperature": 0, "model": "gpt-3.5-turbo-0613"}},
+    "llm": {"name": "OpenAI", 
+            "kwargs": {"temperature": 0}},
     "agent_loader": "base_csv",
     "index_name": "src/backend/database/docs_index"
 }
