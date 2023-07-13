@@ -26,8 +26,8 @@ class Loader(object):
         return [document.metadata[attr] for document in self.db.docstore.__dict__['_dict'].values()]
 
     def get_embedding_class(self):
-        embeddings_name = self.config['embeddings']['name']
-        embeddings = globals()[embeddings_name](**self.config['embeddings']['kwargs'])
+        embeddings_name = self.config['embeddings']['active']
+        embeddings = globals()[embeddings_name](**self.config['embeddings'][embeddings_name])
         return embeddings
     
     def get_vector_db(self):

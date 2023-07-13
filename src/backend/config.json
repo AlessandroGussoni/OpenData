@@ -2,10 +2,14 @@
     "data_sources_path": "src/backend/app/data/services/datasources.py",
     "index": {"db_name": "FAISS", 
               "search_kwargs": {"k": 1}},
-    "embeddings": {"name": "OpenAIEmbeddings", 
-                   "kwargs": {}},
-    "llm": {"name": "OpenAI", 
-            "kwargs": {"temperature": 0}},
+    "embeddings": {"models": {"OpenAIEmbeddings": {},
+                             "FakeEmbeddings": {"size": 100}},
+                   "active": "OpenAIEmbeddings"},
+
+    "llm": {"models" : {"OpenAI": {"temperature": 0},
+                        "Cohere": {"temperature": 0},
+                        "FakeListLLM": {"responses": ["Answer1", "Answer2"]}},
+            "active": "Openai"},
     "agent_loader": "base_csv",
     "index_name": "src/backend/database/docs_index"
 }

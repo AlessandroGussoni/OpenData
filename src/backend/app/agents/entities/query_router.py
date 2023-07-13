@@ -21,8 +21,8 @@ class AgentQueryRouter(IAbstractAgent):
         self.urls = list(query_mapping.keys())
         agent_type = AgentQueryRouter._AGENT_MAPPING.get(config['agent_loader'], None)
         if not agent_type: raise ValueError("Agent not supported")
-        llm = globals()[config['llm']['name']](**config['llm']['kwargs'])
-
+        model = config['llm']['active']
+        llm = globals()[model](**config['llm'][model])
         self.agent = agent_type(llm=llm, datasources_mapper=query_mapping)
 
     def parse_metainformation(self):
