@@ -41,7 +41,7 @@ def update_pipeline(config: Dict[str, str]) -> List[str]:
 
         data_source_instance = data_source()
 
-        data_source_metadata = data_source_instance.update(indexed_datasets, name)
+        data_source_metadata = data_source_instance.update(indexed_datasets)
 
         if not data_source_metadata: continue
 

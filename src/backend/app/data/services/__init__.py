@@ -79,8 +79,7 @@ class BaseDataSource(MetaDataMixIn):
         return docs
 
     def update(self, 
-               indexed_datasets: List,
-               data_source_name: str) -> Union[None, Dict[str, List[str]]]:
+               indexed_datasets: List) -> Union[None, Dict[str, List[str]]]:
         
         """
         Method used to keep the index updated
@@ -93,7 +92,7 @@ class BaseDataSource(MetaDataMixIn):
         # if new ds found, run scraping pipeline
         if new_datasets:
             # get new ds metadata
-            metadata = self._get_metadata(new_datasets, data_source_name)
+            metadata = self._get_metadata(new_datasets)
             
             return metadata
         return None
