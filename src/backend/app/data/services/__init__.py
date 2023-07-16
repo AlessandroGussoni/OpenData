@@ -74,7 +74,7 @@ class BaseDataSource(MetaDataMixIn):
     
     @staticmethod
     def get_documents_from_metadata(metadata: Dict[str, List[str]]) -> List[Document]:
-        # logica oscena, devo cambiarla (velocizzarla per lo meno)  
+        # logica oscena, devo cambiarla (velocizzarla per lo meno) 
         docs = [Document(page_content=row['text'], metadata={**row.to_dict()}) for i, row in DataFrame(metadata).iterrows()]
         return docs
 

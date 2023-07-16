@@ -35,7 +35,7 @@ def update_pipeline(config: Dict[str, str]) -> List[str]:
 
     loader.upload()
 
-    indexed_datasets = loader.get_attribute_from_index('name')
+    indexed_datasets = loader.get_attribute_from_index('dataset_id')
 
     for name, data_source in class_mapper.items():
 

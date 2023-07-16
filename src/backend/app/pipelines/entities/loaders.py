@@ -3,6 +3,7 @@ import json
 
 from langchain.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.embeddings.gpt4all import GPT4AllEmbeddings
 from langchain.embeddings.fake import FakeEmbeddings
 from langchain.docstore.document import Document
 

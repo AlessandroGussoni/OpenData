@@ -7,6 +7,8 @@ from app.data.services import BaseDataSource, IAbstractDataSource
 
 from typing import Union, List, Dict, Tuple
 
+# TODO: maybe i can add an abstraction layer
+
 
 class OpenDataSource(BaseDataSource, IAbstractDataSource):
 
@@ -76,7 +78,7 @@ class OpenDataSource(BaseDataSource, IAbstractDataSource):
                       *args, **kwargs) -> Dict[str, List[str]]:
         
         metadata = OpenDataSource._create_metadata()
-        for name in dataset_names[:50]:
+        for name in dataset_names[:200]:
 
             dataset_version = [name in version_names for version_names in self.dfs].index(True) + 1
             dataset_url = self.parse_url_from_version(dataset_version) + '/' + name
@@ -86,11 +88,12 @@ class OpenDataSource(BaseDataSource, IAbstractDataSource):
             if (url == '') and (title == '') and (df_metadata == ''): continue 
                 
             metadata = OpenDataSource._update_metadata(metadata, 
+                                                       dataset_id=name,
                                                        url=url,
                                                        name=title,
                                                        text=df_metadata,
                                                        data_source=self.name)            
-            print(f"{name} downloaded")
+            print(f"{self.name}: {name} downloaded")
             
 
         return metadata.dict()
@@ -133,7 +136,7 @@ class GovOpenData(BaseDataSource, IAbstractDataSource):
             notes = data['notes']
             tags = [elem['name'] for elem in data['tags']]
         except Exception as e:
-            print(f"Level 1: {e} : {url}")
+            print(f"Level 1: {e} : {data_url}")
             return '', '', ''
         
         df_metadata = GovOpenData._add_tags(title, notes, tags)      
@@ -173,7 +176,7 @@ class GovOpenData(BaseDataSource, IAbstractDataSource):
                       *args, **kwargs) -> Dict[str, List[str]]:
         
         metadata = GovOpenData._create_metadata()
-        for name in dataset_names[:50]:
+        for name in dataset_names[:200]:
 
             dataset_version = [name in version_names for version_names in self.dfs].index(True) + 3
             dataset_url = self.parse_url_from_version(dataset_version) + f"package_show?id={name}"
@@ -183,11 +186,12 @@ class GovOpenData(BaseDataSource, IAbstractDataSource):
             if (url == '') and (title == '') and (df_metadata == ''): continue 
                 
             metadata = GovOpenData._update_metadata(metadata, 
+                                                    dataset_id=name,
                                                     url=url,
                                                     name=title,
                                                     text=df_metadata,
                                                     data_source=self.name)            
-            print(f"{name} downloaded")
+            print(f"{self.name}: {name} downloaded")
             
 
         return metadata.dict()

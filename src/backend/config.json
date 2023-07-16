@@ -3,8 +3,9 @@
     "index": {"db_name": "FAISS", 
               "search_kwargs": {"k": 1}},
     "embeddings": {"models": {"OpenAIEmbeddings": {},
-                             "FakeEmbeddings": {"size": 100}},
-                   "active": "OpenAIEmbeddings"},
+                              "GPT4AllEmbeddings": {},
+                              "FakeEmbeddings": {"size": 100}},
+                   "active": "GPT4AllEmbeddings"},
 
     "llm": {"models" : {"OpenAI": {"temperature": 0},
                         "Cohere": {"temperature": 0},

@@ -3,6 +3,7 @@ from typing import List
 
 class MetaData(BaseModel):
 
+    dataset_id: List[str] = []
     text: List[str] = []
     url: List[str] = []
     name: List[str] = []
