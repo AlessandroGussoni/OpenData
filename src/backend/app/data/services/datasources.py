@@ -78,7 +78,7 @@ class OpenDataSource(BaseDataSource, IAbstractDataSource):
                       *args, **kwargs) -> Dict[str, List[str]]:
         
         metadata = OpenDataSource._create_metadata()
-        for name in dataset_names[:200]:
+        for name in dataset_names[:100]:
 
             dataset_version = [name in version_names for version_names in self.dfs].index(True) + 1
             dataset_url = self.parse_url_from_version(dataset_version) + '/' + name
@@ -176,7 +176,7 @@ class GovOpenData(BaseDataSource, IAbstractDataSource):
                       *args, **kwargs) -> Dict[str, List[str]]:
         
         metadata = GovOpenData._create_metadata()
-        for name in dataset_names[:200]:
+        for name in dataset_names[:100]:
 
             dataset_version = [name in version_names for version_names in self.dfs].index(True) + 3
             dataset_url = self.parse_url_from_version(dataset_version) + f"package_show?id={name}"
@@ -212,7 +212,7 @@ class InpsOpenData(BaseDataSource, IAbstractDataSource):
     VERSIONS = [3]
 
     def __init__(self) -> None:
-        name = "GovOpenData"
+        name = "InpsOpenData"
         url = "https://serviziweb2.inps.it/odapi/"
         super().__init__(name, url)
     
@@ -269,7 +269,7 @@ class InpsOpenData(BaseDataSource, IAbstractDataSource):
         
         metadata = BaseDataSource._create_metadata()
 
-        for name in dataset_names[:200]:
+        for name in dataset_names[:100]:
 
             dataset_url = self.url + f"package_show?id={name}"
 

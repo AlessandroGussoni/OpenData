@@ -1,0 +1,111 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  header {
+    background-color: rgb(176, 219, 67);
+    background: linear-gradient(45deg, rgb(176, 219, 67) 0%, rgb(18, 234, 234) 100%);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    top: 10px;
+    
+  }
+  
+  .title {
+    text-align: left;
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    margin-right: 50rem;
+    margin-left: 3rem;
+  }
+  
+  .new-chat-btn {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 20px;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+  
+  .navbar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  
+  .navbar li {
+    margin-right: 16px;
+  }
+  
+  .navbar a {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+  }
+  
+  main {
+    text-align: center;
+  }
+  
+  .search-section {
+    
+    text-align: center;
+  }
+  
+  .search-form {
+    
+    margin-bottom: 16px;
+  }
+  
+  .search-form input {
+    padding: 8px 16px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-right: 8px;
+  }
+  
+  .search-form button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .conversation {
+    font-size: 18px;
+    padding: 16px;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .image-section {
+    background-color: rgb(176, 219, 67);
+    background: linear-gradient(45deg, rgb(176, 219, 67) 0%, rgb(18, 234, 234) 100%);
+    width: 100vw;
+  }
+  
+  .section-title {
+    text-align: center;
+  }
+  
