@@ -204,3 +204,95 @@ class GovOpenData(BaseDataSource, IAbstractDataSource):
         separator = BaseDataSource.infer_separetor(dataset_url)
         
         return read_csv(dataset_url, sep=separator, encoding='unicode_escape')
+    
+
+
+class InpsOpenData(BaseDataSource, IAbstractDataSource):
+
+    VERSIONS = [3]
+
+    def __init__(self) -> None:
+        name = "GovOpenData"
+        url = "https://serviziweb2.inps.it/odapi/"
+        super().__init__(name, url)
+    
+    @staticmethod
+    def parse_format_from_data(data: Dict) -> Union[str, None]:
+        url = data.get('url', None)
+        if not url: return url
+        format_ = data['url'].split('.')[-1]
+        return format_
+    
+    @staticmethod
+    def parse_data_from_url(data_url: str) -> Tuple[str, str, str]:
+        
+        try:
+            data = requests.get(data_url).json()['result']
+            title = data['title']
+            notes = data['notes']
+            tags = [elem['name'] for elem in data['tags']]
+        except Exception as e:
+            print(f"Level 1: {e} : {data_url}")
+            return '', '', ''
+        
+        df_metadata = BaseDataSource._add_tags(title, notes, tags)      
+
+        if "resources" in data.keys(): 
+            list_info = data['resources']
+        elif "relations" in data.keys(): 
+            list_info = data['relations']
+        else:
+            print(f"{data_url} not found valid data key") 
+            return '', '', ''
+
+        url = ''
+        for resource in list_info:
+            format_ = InpsOpenData.parse_format_from_data(resource)
+            if format_ == 'csv':
+                url = resource['url']
+                break
+
+        return url, title, df_metadata
+    
+    def _list_available_datasets(self, *args, **kwargs) -> List[str]:
+
+        datasets_url = self.url + 'package_list'
+        
+        datasets_names = requests.get(datasets_url).json()['result']
+
+        return datasets_names
+    
+
+    def _get_metadata(self, 
+                      dataset_names: Union[List[str], str],
+                      *args, **kwargs) -> Dict[str, List[str]]:
+        
+        metadata = BaseDataSource._create_metadata()
+
+        for name in dataset_names[:200]:
+
+            dataset_url = self.url + f"package_show?id={name}"
+
+            url, title, df_metadata = InpsOpenData.parse_data_from_url(dataset_url)
+
+            if (url == '') and (title == '') and (df_metadata == ''): continue 
+                
+            metadata = BaseDataSource._update_metadata(metadata, 
+                                                       dataset_id=name,
+                                                       url=url,
+                                                       name=title,
+                                                       text=df_metadata,
+                                                       data_source=self.name)            
+            print(f"{self.name}: {name} downloaded")
+            
+
+        return metadata.dict()
+    
+
+    def read_dataset(self, 
+                     dataset_url: Union[List[str], str], 
+                     *args, **kwargs) -> DataFrame:
+        
+        separator = BaseDataSource.infer_separetor(dataset_url)
+        
+        return read_csv(dataset_url, sep=separator, encoding='unicode_escape')
