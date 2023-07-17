@@ -136,9 +136,18 @@ header {
   outline: none;
 }
 
-.search-btns {
+.search-btns  {
   margin-top: 20px;
 }
+
+.search-btns a img {
+  margin-right: 20px;
+}
+
+h2 {
+  text-align: center;
+}
+
 
 .search-btns button {
   height: 40px;

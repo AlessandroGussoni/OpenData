@@ -1,30 +1,20 @@
 import React from 'react';
 
-const SearchSection = ({searchTerm,
-                        datasetNum,
-                        conversation,
-                        showChatBox,
-                        onSearchChange,
-                        onSearchSubmit,}) => {
+const Search = ({ searchTerm, handleSearchChange, handleSearchSubmit }) => {
   return (
-    <>
+    <form onSubmit={handleSearchSubmit}>
+      <div className="search-bar">
+        <i className="fa-sharp fa-solid fa-magnifying-glass"></i>
         <input
+          id="search-input"
+          className="search-input"
           type="text"
-          placeholder="Enter your search term..."
           value={searchTerm}
-          onChange={onSearchChange}
+          onChange={handleSearchChange}
         />
-        
-      
-      {showChatBox && (
-        <div className="conversation">
-          {conversation.map((message, index) => (
-            <div key={index}>{message}</div>
-          ))}
-        </div>
-      )}
-    </>
+      </div>
+    </form>
   );
 };
 
-export default SearchSection;
+export default Search;

@@ -1,17 +1,19 @@
 import React from 'react';
 
-const ImageSection = () => {
+const ImageSection = ({OpenData, Inps, PortalOpenData}) => {
   return (
-    <section id="image-section" className="image-section">
-      <h2 className="section-title">Images</h2>
-      <div className="image-grid">
-        <img src="image1.jpg" alt="OpenData 1" />
-        <img src="image2.jpg" alt="OpenData 2" />
-        <img src="image3.jpg" alt="OpenData 3" />
-        <img src="image4.jpg" alt="OpenData 4" />
-        <img src="image5.jpg" alt="OpenData 5" />
-      </div>
-    </section>
+    <div class="search-btns">
+            <h2>Le nostre fonti dati</h2>
+            <a href="https://bdap-opendata.rgs.mef.gov.it/">
+              <img src={OpenData} alt="Gov" />
+            </a>
+            <a href="https://www.inps.it/it/it/dati-e-bilanci/open-data.html">
+              <img src={Inps} alt="Inps"/>
+            </a>
+            <a href="http://www.datiopen.it/">
+              <img src={PortalOpenData} alt="Portal"/>
+            </a>
+    </div>
   );
 };
 
