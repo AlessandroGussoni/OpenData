@@ -1,5 +1,6 @@
 env_open/
 .env/
+.vscode/
 __pychache__/
 src/backend/database/docs_index
 # Ignore files with .faiss extension
