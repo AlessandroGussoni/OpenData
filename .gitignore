@@ -1,0 +1,8 @@
+env_open/
+.env/
+__pychache__/
+src/backend/database/docs_index
+# Ignore files with .faiss extension
+*.faiss
+# Ignore files with .pkl extension
+*.pkl

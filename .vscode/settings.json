@@ -1,0 +1,5 @@
+{
+    "search.exclude": {
+        "**/env_open": true
+    }
+}
